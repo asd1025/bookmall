@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import bookmall.connector.Connector;
 import bookmall.vo.BookOrdersVo;
 import bookmall.vo.OrdersVo;
 
@@ -30,7 +31,7 @@ public class BookOrdersDao {
 
 		List<BookOrdersVo> list = new ArrayList<BookOrdersVo>();
 		try {
-			conn = getConnection();
+			conn = Connector.getConnection();
 			String sql = "select o.code,b.title,bo.count,(b.price*bo.count),c.name from book_orders bo, book b, category c , orders o"
 					+ "		where bo.book_no=b.book_no " + " and c.category_no=b.category_no and o.orders_no=bo.orders_no "
 					+ "		 and bo.orders_no=?";
@@ -55,7 +56,7 @@ public class BookOrdersDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			allClose(conn, pstmt, rs);
+			Connector.allClose(conn, pstmt, rs);
 		}
 		return list;
 	}
@@ -66,7 +67,7 @@ public class BookOrdersDao {
 	public boolean insert(BookOrdersVo vo) {
 		boolean result = false;
 		try {
-			conn = getConnection();
+			conn = Connector.getConnection();
 			String sql = " insert into book_orders values (?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, vo.getBookNo());
@@ -77,35 +78,11 @@ public class BookOrdersDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			allClose(conn, pstmt, rs);
+			Connector.allClose(conn, pstmt, rs);
 		}
 		return result;
 	}
 
-	private Connection getConnection() throws SQLException {
-		Connection conn = null;
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		String url = "jdbc:mariadb://192.168.1.145:3307/bookmall";
-		conn = DriverManager.getConnection(url, "bookmall", "bookmall");
-		return conn;
-	}
-
-	private void allClose(Connection conn, PreparedStatement pstmt, ResultSet rs) {
-		try {
-			if (conn != null)
-				conn.close();
-			if (rs != null)
-				rs.close();
-			if (pstmt != null)
-				pstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+	 
 
 }

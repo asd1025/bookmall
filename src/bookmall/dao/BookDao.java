@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import bookmall.connector.Connector;
 import bookmall.vo.BookVo;
 
 public class BookDao {
@@ -18,7 +19,7 @@ public class BookDao {
 	public boolean insert(BookVo vo) {
 		boolean result=false;
 		try {
-			conn=getConnection();
+			conn=Connector.getConnection();
 			String sql="insert into book values (null,?,?,?)";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
@@ -29,7 +30,7 @@ public class BookDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			allClose(conn, pstmt, rs);
+			Connector.allClose(conn, pstmt, rs);
 		}
 		return result;
 	}
@@ -37,7 +38,7 @@ public class BookDao {
 	public List<BookVo> getList(){
 		List<BookVo> list=new ArrayList<BookVo>();
 		try {
-			conn=getConnection();
+			conn=Connector.getConnection();
 			String sql="select b.title, b.price, c.name  from book b, category c where b.category_no=c.category_no";
 			pstmt=conn.prepareStatement(sql);
 			rs=pstmt.executeQuery();
@@ -55,34 +56,11 @@ public class BookDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			allClose(conn, pstmt, rs);
+			Connector.allClose(conn, pstmt, rs);
 		}
 		return list;
 	}
 	
 	
-	private Connection getConnection() throws SQLException {
-		Connection conn=null;
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		String url="jdbc:mariadb://192.168.1.145:3307/bookmall";
-		conn=DriverManager.getConnection(url,"bookmall","bookmall");
-		return conn;
-	}
-	private void allClose(Connection conn,PreparedStatement pstmt, ResultSet rs) {
-		try {
-			if (conn != null)
-				conn.close();
-			if (rs != null)
-				rs.close();
-			if (pstmt != null)
-				pstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+	 
 }

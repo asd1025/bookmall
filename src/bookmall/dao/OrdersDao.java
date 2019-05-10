@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import bookmall.connector.Connector;
 import bookmall.vo.BookOrdersVo;
 import bookmall.vo.OrdersVo;
 
@@ -33,7 +34,7 @@ public class OrdersDao {
 	public boolean insert(OrdersVo vo) {
 		boolean result=false;
 		try {
-			conn=getConnection();
+			conn=Connector.getConnection();
 			String sql=" insert into orders values "
 					+ "(null,?,?,now(),null,?)";
 			pstmt=conn.prepareStatement(sql);
@@ -53,7 +54,7 @@ public class OrdersDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			allClose(conn, pstmt, rs);
+			Connector.allClose(conn, pstmt, rs);
 		}
 		return result;
 	}
@@ -63,7 +64,7 @@ public class OrdersDao {
 	public boolean update(Long ordersNo) {
 		boolean result=false;
 		try {
-			conn=getConnection();
+			conn=Connector.getConnection();
 			String sql="update orders o set code =(\r\n" + 
 					"select concat ( (select date_format(o.date,'%Y%m%d')), '',(select lpad(?,4,0)) ) " + 
 					") where orders_no=? " ;
@@ -76,7 +77,7 @@ public class OrdersDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			allClose(conn, pstmt, rs);
+			Connector.allClose(conn, pstmt, rs);
 		}
 		return result;
 	}
@@ -86,7 +87,7 @@ public class OrdersDao {
 	public List<OrdersVo> getOrderList(Long MemeberNo){
 		List<OrdersVo> list=new ArrayList<OrdersVo>();
 		try {
-			conn=getConnection();
+			conn=Connector.getConnection();
 			String sql="select o.code,m.name,o.price,o.address,o.date from "
 					+ "orders o , member m where o.member_no=m.member_no and  o.member_no=?";
 			pstmt=conn.prepareStatement(sql);
@@ -110,36 +111,9 @@ public class OrdersDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			allClose(conn, pstmt, rs);
+			Connector.allClose(conn, pstmt, rs);
 		}
 		return list;
 	}
-	
 	 
-	private Connection getConnection() throws SQLException {
-		Connection conn=null;
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		String url="jdbc:mariadb://192.168.1.145:3307/bookmall";
-		conn=DriverManager.getConnection(url,"bookmall","bookmall");
-		return conn;
-	}
-	private void allClose(Connection conn,PreparedStatement pstmt, ResultSet rs) {
-		try {
-			if (conn != null)
-				conn.close();
-			if (rs != null)
-				rs.close();
-			if (pstmt != null)
-				pstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
 }
