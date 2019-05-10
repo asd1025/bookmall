@@ -17,7 +17,7 @@ public class CategoryDao {
 	
 	public boolean insert(CategoryVo vo) {
 		boolean result=false;
-		try {
+		try {			
 			conn=getConnection();
 			String sql="insert into category values(null,?)";
 			pstmt=conn.prepareStatement(sql);
