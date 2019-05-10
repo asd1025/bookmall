@@ -68,7 +68,7 @@ public static void  getCartList(Long memberNo){
 public static void  getOrderList(Long MemeberNo){
 	List<OrdersVo> list=new OrdersDao().getOrderList(MemeberNo);
 	String name=null;
-	for(OrdersVo vo:list) {
+	for(OrdersVo vo:list) { 
 		if(name==null) {
 			name=vo.getName();
 			System.out.println("************************* "+name+"님의 주문내역 *************************");
@@ -82,7 +82,7 @@ public static void  getOrderBookList(Long MemeberNo){
 	List<BookOrdersVo> list=new BookOrdersDao().getOrderBookList(MemeberNo);
 	System.out.println("************************* 주문된 책 리스트 *************************");
 	for(BookOrdersVo vo:list) {
-		System.out.println("제목:"+vo.getBookName()+" | 수량:"+vo.getCount()
+		System.out.println("주문번호: "+vo.getOrdersBookCode()+" | 제목:"+vo.getBookName()+" | 수량:"+vo.getCount()
 		+" | 가격:"+vo.getPrice()+" | 분류:"+vo.getCategoryName());
 	}
 	
