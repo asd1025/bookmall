@@ -31,18 +31,20 @@ public class BookOrdersDao {
 		List<BookOrdersVo> list = new ArrayList<BookOrdersVo>();
 		try {
 			conn = getConnection();
-			String sql = "select b.title,bo.count,(b.price*bo.count),c.name from book_orders bo, book b, category c "
-					+ "		where bo.book_no=b.book_no " + " and c.category_no=b.category_no "
+			String sql = "select o.code,b.title,bo.count,(b.price*bo.count),c.name from book_orders bo, book b, category c , orders o"
+					+ "		where bo.book_no=b.book_no " + " and c.category_no=b.category_no and o.orders_no=bo.orders_no "
 					+ "		 and bo.orders_no=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, orderNo);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				String bookName = rs.getString(1);
-				int count = rs.getInt(2);
-				int price = rs.getInt(3);
-				String categoryName = rs.getString(4);
+				String ordersBookCode = rs.getString(1);
+				String bookName = rs.getString(2);
+				int count = rs.getInt(3);
+				int price = rs.getInt(4);
+				String categoryName = rs.getString(5);
 				BookOrdersVo vo = new BookOrdersVo();
+				vo.setOrdersBookCode(ordersBookCode);
 				vo.setBookName(bookName);
 				vo.setCount(count);
 				vo.setPrice(price);

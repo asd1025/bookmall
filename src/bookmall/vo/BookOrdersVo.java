@@ -8,6 +8,7 @@ private int count;
 private String bookName;
 private int price;
 private String categoryName;
+private String ordersBookCode;
 public Long getBookNo() {
 	return bookNo;
 }
@@ -44,11 +45,18 @@ public String getCategoryName() {
 public void setCategoryName(String categoryName) {
 	this.categoryName = categoryName;
 }
+public String getOrdersBookCode() {
+	return ordersBookCode;
+}
+public void setOrdersBookCode(String ordersBookCode) {
+	this.ordersBookCode = ordersBookCode;
+}
 @Override
 public String toString() {
 	return "BookOrdersVo [bookNo=" + bookNo + ", ordersNo=" + ordersNo + ", count=" + count + ", bookName=" + bookName
-			+ ", price=" + price + ", categoryName=" + categoryName + "]";
+			+ ", price=" + price + ", categoryName=" + categoryName + ", ordersBookCode=" + ordersBookCode + "]";
 }
+ 
  
 
 
